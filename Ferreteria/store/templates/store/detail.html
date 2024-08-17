@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <div class="container">
+        <div class="row">
+            <div class="alert alert-primary fw600 rounded-0 border-0 py-3" role="alert">
+                <u>Antes de añadir al carrito</u> no olvides seleccionar la cantidad de productos a comprar.
+            </div>
+            
+            <div class="col-md-6 offset-md-3">
+                <div class="text-center">
+                    <br>
+                    <div class="card mb-3">
+                        <img src="{{ product.image.url }}" class="mx-auto" alt="responsive image">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ product.name }}</h5>
+                            <p class="card-text">{{ product.description }}</p>
+                            <h3>${{ product.price|floatformat:0 }}</h3>
+
+                            <br>
+
+                            {% if user.is_authenticated %}
+                        
+                                <a href="{% url 'add-to-cart' product.slug %}" class="btn btn-success my-2">Añadir al carrito + (1)</a>
+                            
+                            {% else %}
+
+                            <p class="card-text">Justo aquí debería aparecer el botón añadir al carrito, pero no aparece porque no estás registrado. <b>¡Regístrate o inicia sesión!</b></p>
+
+                            {% endif %}
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

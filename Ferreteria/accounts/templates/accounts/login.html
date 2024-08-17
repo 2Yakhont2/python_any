@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <!-- Header-->
+    <header class="py-5" style="background-color: #F5ECEC">
+        <div class="container px-4 px-lg-5 my-5">
+            <div class="text-center text-black">
+                <h1 class="display-4 fw-bolder">Inicia sesión</h1>
+            </div>
+        </div>
+    </header>
+
+    <!-- action="{% url 'login' %}" -->
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 offset-md-3">
+                <div class="text-center">
+                    <br><br>
+                    <form method="POST" >
+                        {% csrf_token %}
+                        <div class="mb-3">
+                          <label for="exampleInputText1" class="form-label">Nombre de usuario</label>
+                          <input type="text" class="form-control" id="username" name="username" aria-describedby="emailHelp">
+                        </div>
+                        <div class="mb-3">
+                          <label for="exampleInputPassword1" class="form-label">Contraseña</label>
+                          <input type="password" class="form-control" id="password" name="password">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Ingresar</button>
+                    </form>
+                    <br><br>
+                    <div class="row">
+                        <p>¿Aún no tienes una cuenta? <a href="{% url 'signup' %}">Regístrate</a></p>
+                    </div>
+                    <br>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

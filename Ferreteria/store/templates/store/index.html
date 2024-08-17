@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <!-- Header-->
+    <header class="py-5" style="background-color: #F5ECEC">
+        <div class="container px-4 px-lg-5 my-5">
+            <div class="text-center text-black">
+                <h1 class="display-4 fw-bolder">Ferretería CONSTRUMOLE</h1>
+                <p class="lead fw-normal text-black-50 mb-0">Navega por nuestra amplia selección de productos y herramientas de construcción. <br>Con nuestro fácil proceso de compra y entrega rápida, hacer tus compras en línea nunca ha sido tan conveniente.</p>
+
+                {% if user.is_authenticated %}
+                
+                {% else %}
+                <br>
+                <a href="{% url 'signup' %}" class="btn btn-info my-2">Crea una cuenta</a>
+
+                {% endif %}
+
+            </div>
+        </div>
+    </header>
+
+    <section class="py-5">
+        <div class="container px-4 px-lg-5 mt-5">
+            <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+
+                <!--La etiqueta for permite hacer un bucle por cada elemento en products. 
+                    Se crea una tarjeta por cada elemento que exista en products-->
+                {% for product in products %}
+                <div class="col mb-5">
+                    <div class="card h-100">
+                        <!-- Por cada product buscamos el campo image-->
+                        <img class="card-img-top" src="{{ product.image.url }}" alt="{{ product.name }}" />
+                        <div class="card-body p-4" style="background-color: #EEE8E8">
+                            <div class="text-center">
+                                <!-- Por cada product buscamos el campo category-->
+                                <a href="{% url 'category' product.category.slug %}" style="color: inherit; text-decoration: none;">
+                                    {{ product.category.name }}
+                                </a>
+                                <!-- Por cada product buscamos el campo name-->
+                                <h5 class="fw-bolder">{{ product.name }}</h5>
+                                <!-- Por cada product buscamos el campo price-->
+                                ${{ product.price|floatformat:0 }}
+                            </div>
+                        </div>
+                        <!-- Boton -->
+                        <div class="card-footer p-4 pt-0 border-top-0" style="background-color: #EEE8E8">
+                            <div class="text-center"><a class="btn btn-light mt-auto" style="border-color:black " href="{% url 'product' product.slug %}">Ver producto</a></div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                
+            </div>
+        </div>
+    </section>
+
+{% endblock %}

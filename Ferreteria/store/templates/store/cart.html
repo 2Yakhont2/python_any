@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <!-- Header-->
+    <header class="py-5" style="background-color: #F5ECEC; padding-top: 0.50rem !important; padding-bottom: 0.50rem !important;" >
+        <div class="container px-4 px-lg-5 my-5">
+            <div class="text-center text-black">
+                <h1 class="display-4 fw-bolder">Carrito de compras</h1>
+            </div>
+        </div>
+    </header>
+
+    <div class="container px-4 px-lg-5 mt-5">
+        <div class="row g-3">
+            <div class="col-12 bg-light p-3 d-flex justify-content-between">
+                <div class="d-flex d-flex-inline">
+                    <div class="pe-3">Orden</div>
+                </div>
+      
+                <div class="text-end">
+                    <div>Total:
+                      <div id="total" class="d-inline-flex fw-bold">${{ total_price|floatformat:0 }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <section class="py-5">
+        <div class="text-center">
+            <a href="{% url 'delete-cart' %}" class="btn btn-danger"> Vaciar carrito ({{ user.cart.orders.count }})</a>
+            <a href="{% url 'order-checkout' %}" class="btn btn-success"> Pagar</a>
+        </div>
+    
+        <div class="container px-4 px-lg-5 mt-5">
+            <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+
+                {% for order in orders %}
+
+                <div class="col mb-5">
+                    <div class="card h-100">
+                        <!-- Product image-->
+                        <img class="card-img-top" src="{{ order.product.image.url }}" alt="{{ order.product.name }}" />
+                        <div class="card-body p-4" style="background-color: #EEE8E8">
+                            <div class="text-center">
+                                <!-- Product name-->
+                                <h5 class="fw-bolder">{{ order.product.name }}</h5>
+                                <b>Unidades:</b> {{ order.quantity }}
+                                <br>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {% endfor %}
+                
+            </div>
+        </div>
+    </section>
+                
+{% endblock %}

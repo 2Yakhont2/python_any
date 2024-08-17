@@ -1,0 +1,33 @@
+<nav class="navbar navbar-expand-lg" style="background-color: #fff;">
+    <div class="container px-4 px-lg-5">
+        <a class="navbar-brand" href="{% url 'index' %}">CONSTRUMOLE</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+
+                <!--Estos dos enlaces solo estan disponibles si el usuario ha iniciado sesion-->
+                {% if user.is_authenticated %}
+                <li class="nav-item"><a class="nav-link" href="{% url 'profile' %}">{{ user.username }}</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Salir</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'order-list' %}">Mis Pedidos</a></li>
+
+                <!--Si el usuario no ha iniciado sesion la barra de navegacion mostrara un enlace llamado Ingresar-->
+                {% else %}
+                <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Ingresar</a></li>
+
+                {% endif %}
+
+            </ul>
+
+            {% if user.cart %} 
+            <form class="d-flex">
+                <a href="{% url 'cart' %}" class="btn btn-outline-primary">
+                    <i class="bi-cart-fill me-1"></i>
+                    Cart
+                    <span class="ms-1" id="cart_quantity" style="font-size: 1em">({{ user.cart.orders.count }})</span>
+                </a>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+</nav>
