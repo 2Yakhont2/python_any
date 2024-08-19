@@ -38,6 +38,15 @@ class Product(models.Model):
     
     def __str__(self):
         return self.name
+    
+    def save(self, *args, **kwargs):
+        # Reactivar el producto si su stock es mayor que 0
+        if self.stock > 0:
+            self.is_active = True
+        else:
+            self.is_active = False  ### Si el stock es 0 o menor, desactivar el producto
+            
+        super(Product, self).save(*args, **kwargs)
 
 
 class Order(models.Model):
@@ -65,11 +74,5 @@ class Cart(models.Model):
         total_price = sum(order.get_total_price() for order in self.orders.all())
         return total_price
     
-    # def get_total_price(self):
-    #     total_price = Decimal('0.00')
-    #     for order in self.orders.all():
-    #         product_price = order.product.price
-    #         quantity = order.quantity
-    #         total_price += product_price * quantity
-    #     return total_price
+
 

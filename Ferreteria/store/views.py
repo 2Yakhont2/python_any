@@ -41,28 +41,25 @@ def add_to_cart(request, slug):
     # Verificamos si el producto existe o no, si no existe lanzamos un error 404
     product = get_object_or_404(Product, slug=slug)
 
-    # objects.get_or_create >> Este metodo permite crear un elemento (si no existe), 
-    # o recuperar un elemento (si existe)
 
-    # Recuperamos el carrito del usuario (si existe) o si no lo creamos
+    # Verificar si el producto está activo y tiene stock disponible
+    if not product.is_active or product.stock <= 0:
+        return redirect('product', slug=slug)
+    
     cart, _ = Cart.objects.get_or_create(user=user)
-
-    # Buscamos en la base de datos si hay un objeto orden que este asociado 
-    # al usuario que realiza la solicitud, y a quien corresponde el producto que
-    # deseamos agregar
     order, created = Order.objects.get_or_create(user=user, ordered=False, product=product)
 
-    # Ese metodo devolvera dos cosas: El objeto creado o el objeto recuperado, y
-    # la informacion si el objeto fue creado o no.
-
-    # Si el producto se crea = no existia antes, entonces lo agregamos al carrito
     if created:
         cart.orders.add(order)
         cart.save()
     # Si el producto no se crea = existe
     else:
-        order.quantity += 1
-        order.save()
+        if order.quantity + 1 <= product.stock:
+            order.quantity += 1
+            order.save()
+        else:
+            # Mostrar un mensaje de que no hay stock suficiente
+            return redirect('product', slug=slug)
 
     return redirect(reverse("product", kwargs={"slug": slug}))
 
@@ -71,6 +68,10 @@ def order_checkout(request):
     cart = request.user.cart
     if cart:
         for order in cart.orders.filter(ordered=False):
+            if order.quantity > order.product.stock:
+                # No procesar el checkout si no hay stock suficiente
+                return redirect('cart')
+            
             order.product.stock -= order.quantity
             order.product.save()
             order.ordered = True
@@ -90,6 +91,10 @@ def delete_cart(request):
 
 def cart(request):
     cart = get_object_or_404(Cart, user=request.user)
+
+    if not cart.orders.exists():
+        return redirect('index')
+
     total_price = cart.get_total_price()
     print(f"Total price calculated: {total_price}")
     return render(request, 'store/cart.html', {'cart': cart, 'orders': cart.orders.all(), 'total_price': total_price})

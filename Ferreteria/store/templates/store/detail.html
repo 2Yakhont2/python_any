@@ -21,9 +21,15 @@
                             <br>
 
                             {% if user.is_authenticated %}
-                        
-                                <a href="{% url 'add-to-cart' product.slug %}" class="btn btn-success my-2">Añadir al carrito + (1)</a>
-                            
+
+                                {% if product.is_active %}
+                                    <a href="{% url 'add-to-cart' product.slug %}" class="btn btn-success my-2">Añadir al carrito + (1)</a>
+                                {% else %}
+
+                                    <p class="text-danger">Este producto no está disponible actualmente.</p>
+                                    
+                                {% endif %}
+
                             {% else %}
 
                             <p class="card-text">Justo aquí debería aparecer el botón añadir al carrito, pero no aparece porque no estás registrado. <b>¡Regístrate o inicia sesión!</b></p>
